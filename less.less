@@ -1,0 +1,231 @@
+//Variables
+@nice-blue: #5B83AD;
+@light-blue: @nice-blue + #111;
+
+#header {
+  color: @light-blue;
+}
+
+
+
+//Mixins
+.bordered {
+  border-top: dotted 1px black;
+  border-bottom: solid 2px black;
+}
+// sdsd
+#menu a {
+  color: #112;
+  .bordered;
+}
+
+.post a {
+  color: red;
+  .bordered;
+}
+
+
+
+//Nested rules
+#header {
+  color: black;
+  .navigation {
+    font-size: 12px;
+  }
+  .logo {
+    width: 300px;
+  }
+}
+
+
+//Nested directives and bubbling
+
+	//Conditional directives e.g. @Media, @supports and @document have also selectors copied into their bodies:
+.screen-color {
+  @media screen {
+    color: green;
+    @media (min-width: 768px) {
+      color: red;
+    }
+  }
+  @media tv {
+    color: black;
+  }
+}
+
+
+	//Remaining non-conditional directives, for example font-face or keyframes, are bubbled up too. Their bodies do not change:
+#a {
+  color: blue;
+  @font-face {
+    src: made-up-url;
+  }
+  padding: 2 2 2 2;
+}
+
+
+
+//Operations
+@base: 5%;
+@filler: @base * 2;
+@other: @base + @filler;
+
+.test {
+	color: #888 / 4;
+	background-color: @base + #111;
+	height: 100% / 2 + @filler;
+}
+	//Less will use that unit for the final output—6px in this case.
+@var: 1px + 5;
+
+
+
+//Parent Selectors
+a {
+  color: blue;
+  &:hover {
+    color: green;
+  }
+}
+
+
+.button {
+  &-ok {
+    background-image: url("ok.png");
+  }
+  &-cancel {
+    background-image: url("cancel.png");
+  }
+
+  &-custom {
+    background-image: url("custom.png");
+  }
+}
+
+
+//Escaping
+.weird-element {
+  content: ~"^//* some horrible but needed css hack";
+}
+
+
+
+//Functions
+@base: #f04615;
+@width: 0.5;
+
+.class {
+  width: percentage(@width); // returns `50%`
+  color: saturate(@base, 5%);
+  background-color: spin(lighten(@base, 25%), 8);
+}
+
+
+//Namespaces and Accessors
+	//Note that variables declared within a namespace will be scoped to that namespace only and will not be available outside of the scope via the same syntax that you would use to reference a mixin (#Namespace > .mixin-name). So, for example, you can't do the following: (#Namespace > @this-will-not-work).
+#bundle {
+  .button {
+    display: block;
+    border: 1px solid black;
+    background-color: grey;
+    &:hover {
+      background-color: white
+    }
+  }
+  .tab {  }
+  .citation {  }
+}
+
+#header a {
+  color: orange;
+  #bundle > .button;
+}
+
+
+
+//scope
+@var: red;
+
+#page {
+  @var: white;
+  #header {
+    color: @var; // white
+  }
+}
+
+	//Variables and mixins do not have to be declared before being used so the following Less code is identical to the previous example:
+
+@var: red;
+
+#page2 {
+  #header2 {
+    color: @var; // white
+  }
+  @var: white;
+}
+
+
+//Comments
+	/* One hell of a block
+	style comment! */
+@var: red;
+
+	// Get in line!
+@var: white;
+
+
+//Importing
+	//Importing works pretty much as expected. You can import a .less file, and all the variables in it will be available. The extension is optionally specified for .less files.
+@import "library"; // library.less
+@import "typo.css";
+
+.libtest{
+	.library;
+}
+
+
+//selectors
+
+	// Variables
+	@my-selector: banner;
+
+		// Usage
+	.@{my-selector} {
+	  font-weight: bold;
+	  line-height: 40px;
+	  margin: 0 auto;
+	}
+
+
+	//URLS
+		// Variables
+	@images: "../img";
+
+		// Usage
+	body {
+	  color: #444;
+	  background: url("@{images}/white-sand.png");
+	}
+
+	//import
+		// Variables
+	@themes: "./";
+
+		// Usage
+	@import "@{themes}/library.less";
+
+	//property
+	@property: color;
+
+	.widget {
+	  @{property}: #0ee;
+	  background-@{property}: #999;
+	}
+
+	//name
+	@fnord:  "I am fnord.";
+	@var:    "fnord";
+	.varname{
+			content: @@var;
+	}
+

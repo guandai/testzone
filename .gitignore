@@ -1,0 +1,7 @@
+*.class
+*.pyc
+*.pyo
+.git
+desktop.ini
+GAN/bower_components/
+.DS_Store
